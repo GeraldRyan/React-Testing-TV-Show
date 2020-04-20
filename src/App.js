@@ -5,35 +5,40 @@ import parse from "html-react-parser";
 
 import { formatSeasons } from "./utils/formatSeasons";
 
+import { fetchShow } from './api/fetchShow'
+
 import Episodes from "./components/Episodes";
 import "./styles.css";
 
-export default function App() {
-  const [show, setShow] = useState(null);   // not sure
-  const [seasons, setSeasons] = useState([]); 
+export default function App()
+{
+  const [show, setShow] = useState(null);   // object of the entire show all seasons etc
+  const [seasons, setSeasons] = useState([]);
   const [selectedSeason, setSelectedSeason] = useState(""); // obvious what for
   const episodes = seasons[selectedSeason] || []; // not sure how this works. 
 
-  useEffect(() => { // runs after component (app) mounts and only once because no other change can make it rerun.
-    const fetchShow = () => { // this object is a function, zwar a get func.
-      axios
-        .get(
-          "https://api.tvmaze.com/singlesearch/shows?q=stranger-things&embed=episodes"
-        )
-        .then(res => {
-          setShow(res.data); // uses get return to set value of show
-          console.log("Response Data: ", res.data)
-          setSeasons(formatSeasons(res.data._embedded.episodes)); // an array of episode objects w lots of data 
+  useEffect(() =>
+  { // runs after component (app) mounts and only once because no other change can make it rerun.
+
+    // Async call being in component makes hard to test async nature of component ...
+
+      fetchShow()
+        .then(res =>
+        {
+          console.log("Res", res)
+          setShow(res.data);
+          setSeasons(formatSeasons(res.data._embedded.episodes));
         });
-    };
-    fetchShow();
+    fetchShow(); // so if defined it does not call.
   }, []);
 
-  const handleSelect = e => {
+  const handleSelect = e =>
+  { // called in dropdown onChange event. Dropdown is coming from React Dropdown, it's own library, imported. 
     setSelectedSeason(e.value);
   };
 
-  if (!show) {
+  if (!show)
+  {
     return <h2>Fetching data...</h2>;
   }
 
