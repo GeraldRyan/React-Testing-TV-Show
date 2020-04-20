@@ -1,5 +1,5 @@
 import React from 'react'
-import {render} from '@testing-library/react'
+import {render, getByText} from '@testing-library/react'
 import Episodes from './Episodes'
 
 const episodeTestData = [
@@ -75,8 +75,13 @@ test("Does the component Render?", ()=>{
 
 test("Check that episodes re-renders upon initialization", ()=>{
   
-  const { rerender } = render(<Episodes episodes={[]}/>)
+  const { rerender, debug, getByText } = render(<Episodes episodes={[]}/>)
   
   rerender(<Episodes episodes={episodeTestData} />)
+  // debug()
+// query for specific 
+ 
+ const vanishing = getByText(/Vanishing/i)
+ expect(vanishing).toBeInTheDocument
 
 })
