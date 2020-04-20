@@ -9,20 +9,21 @@ import Episodes from "./components/Episodes";
 import "./styles.css";
 
 export default function App() {
-  const [show, setShow] = useState(null);
-  const [seasons, setSeasons] = useState([]);
-  const [selectedSeason, setSelectedSeason] = useState("");
-  const episodes = seasons[selectedSeason] || [];
+  const [show, setShow] = useState(null);   // not sure
+  const [seasons, setSeasons] = useState([]); 
+  const [selectedSeason, setSelectedSeason] = useState(""); // obvious what for
+  const episodes = seasons[selectedSeason] || []; // not sure how this works. 
 
-  useEffect(() => {
-    const fetchShow = () => {
+  useEffect(() => { // runs after component (app) mounts and only once because no other change can make it rerun.
+    const fetchShow = () => { // this object is a function, zwar a get func.
       axios
         .get(
           "https://api.tvmaze.com/singlesearch/shows?q=stranger-things&embed=episodes"
         )
         .then(res => {
-          setShow(res.data);
-          setSeasons(formatSeasons(res.data._embedded.episodes));
+          setShow(res.data); // uses get return to set value of show
+          console.log("Response Data: ", res.data)
+          setSeasons(formatSeasons(res.data._embedded.episodes)); // an array of episode objects w lots of data 
         });
     };
     fetchShow();
